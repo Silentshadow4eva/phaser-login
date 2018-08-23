@@ -4,43 +4,52 @@ module.exports = function(app, passport) {
 
 app.get('/profile/game',isLoggedIn,function(req,res){
 
-        res.render("gamepage");
-    })
-    app.post('/saveScore', function(req, res){
-        console.log(req.body)
+    res.render("gamepage", {
+        user:req.user
+    });
+})
 
-        User.findOne({_id:req.user._id}, function (err, user) {
-            user.topScore = Math.max(req.body.score, user.topScore)
 
-            user.save(function (err) {
-                if(err) {
-                    console.error('ERROR!');
+app.post('/profile/saveScore', function(req, res){
+    console.log(req.body)
+
+    User.findOne({_id:req.user._id}, function (err, user) {
+        user.topScore = Math.max(req.body.score, user.topScore)
+        user.lastScore = req.body.score
+
+        user.save(function (err) {
+            if(err) {
+                console.error('ERROR!');
                 }
-                    res.json({topScore:user.topScore})
-            });
+                res.json({topScore:user.topScore, lastScore:user.lastScore})
+
         });
+    });
         
-    })
+})
+
 
 app.get('/profile/knife',isLoggedIn,function(req,res){
 
-        res.render("knifehit");
-    })
-    app.post('/saveScore', function(req, res){
-        console.log(req.body)
+    res.render("knifehit");
+})
 
-        User.findOne({_id:req.user._id}, function (err, user) {
-            user.topScore = Math.max(req.body.score, user.topScore)
+/*
+app.post('/profile/saveScore', function(req, res){
+    console.log(req.body)
 
-            user.save(function (err) {
-                if(err) {
-                    console.error('ERROR!');
-                }
-                    res.json({topScore:user.topScore})
-            });
+    User.findOne({_id:req.user._id}, function (err, user) {
+        user.topScore = Math.max(req.body.score, user.topScore)
+
+        user.save(function (err) {
+            if(err) {
+                console.error('ERROR!');
+            }
+                res.json({topScore:user.topScore})
         });
-        
-    })
+    });
+    
+})*/
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)

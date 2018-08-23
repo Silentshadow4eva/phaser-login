@@ -19,6 +19,9 @@
 <body>
 
     <h1> Star Chaser </h1>
+    <p>Current Top Score  <span id="topScore">{{user.topScore}} </span> </P>
+    <p>Last Score  <span id="lastScore">{{user.lastScore}} </span> </P>
+
 
 <script type="text/javascript">
 
@@ -207,6 +210,17 @@ function hitBomb (player, bomb)
     player.anims.play('turn');
 
     gameOver = true;
+
+    saveScore();
+}
+    
+
+function saveScore(){
+    $.post("saveScore", {score}, function(result){
+        console.log(result);
+        $('#topScore').text(result.topScore)
+        $('#lastScore').text(result.lastScore)
+    });
 }
 
 </script>
