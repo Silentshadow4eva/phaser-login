@@ -10,16 +10,32 @@ app.get('/profile/game',isLoggedIn,function(req,res){
 })
 
 
-app.post('/profile/saveScore', function(req, res){
-    console.log(req.body)
+app.post('/profile/saveScore', isLoggedIn, function(req, res){
+    console.log(req.body, "WHY")
 
-    User.findOne({_id:req.user._id}, function (err, user) {
+    User.findOneAndUpdate({_id:req.user._id}, function (err, user) {
         user.topScore = Math.max(req.body.score, user.topScore)
         user.lastScore = req.body.score
 
+        //looping through each game to post save score to individual game 
+        let match = false
+        user.games.forEach(function(game){
+            if (game.id === req.body.game){
+                game.topScore =Math.max(req.body.score, game.topScore)
+                game.lastScore = req.body.score
+                match = true
+            }
+        }) 
+
+        if (!match){
+            user.games.push({
+                id:req.body.game,topScore:req.body.score,lastScore:req.body.score
+            })
+        }
+console.log(user)
         user.save(function (err) {
             if(err) {
-                console.error('ERROR!');
+                console.error('ERROR!',err);
                 }
                 res.json({topScore:user.topScore, lastScore:user.lastScore})
 
@@ -33,6 +49,13 @@ app.get('/profile/knife',isLoggedIn,function(req,res){
 
     res.render("knifehit");
 })
+
+app.get('/profile/defender',isLoggedIn,function(req,res){
+
+    res.render("defender");
+
+})
+
 
 /*
 app.post('/profile/saveScore', function(req, res){

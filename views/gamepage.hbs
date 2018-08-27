@@ -6,28 +6,28 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style type="text/css">
-        body {
-            margin: 0;
-            text-align: center;
-            margin-top: 150px;
-        }
         h1 {
             color: red;
         }
+        canvas { 
+             
+            width: 100vw; 
+            display: block;
+}
     </style>
 </head>
 <body>
 
-    <h1> Star Chaser </h1>
+   <!--<h1> Star Chaser </h1>
     <p>Current Top Score  <span id="topScore">{{user.topScore}} </span> </P>
-    <p>Last Score  <span id="lastScore">{{user.lastScore}} </span> </P>
+    <p>Last Score  <span id="lastScore">{{user.lastScore}} </span> </P>-->
 
 
 <script type="text/javascript">
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
+    width:800,
     height: 600,
     physics: {
         default: 'arcade',
@@ -216,7 +216,7 @@ function hitBomb (player, bomb)
     
 
 function saveScore(){
-    $.post("saveScore", {score}, function(result){
+  $.post("saveScore", {score:score, game:window.location.pathname}, function(result){
         console.log(result);
         $('#topScore').text(result.topScore)
         $('#lastScore').text(result.lastScore)
